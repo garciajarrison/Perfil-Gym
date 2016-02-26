@@ -12,7 +12,7 @@ $msg = null;
     $mensaje = $_POST["mensaje"];
     $adjunto = $_FILES["adjunto"];
         
-        require "PHPMailer/class.phpmailer.php";
+        require "PHPMailer/PHPMailerAutoload.php";
     
           $mail = new PHPMailer;
           
