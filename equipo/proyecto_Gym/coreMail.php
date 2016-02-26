@@ -1,11 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>PHPMailer - GMail SMTP test</title>
-</head>
-<body>
- 
 <?php
 // Libreria PHPMailer
 require 'PHPMailer/PHPMailerAutoload.php';
@@ -39,11 +31,11 @@ $mail->SMTPAuth = true;
 // Usuario del correo desde el cual queremos enviar, para Gmail recordar usar el usuario completo (usuario@gmail.com) 
 $mail->Username = "eafit.pruebas@gmail.com"; 
  
-// Contraseña 
+// ContraseÃ±a 
 $mail->Password = "Hola123*"; 
  
 // Conectamos a la base de datos 
-//$db = new mysqli('hostname', 'usuario', 'cotraseña', 'basededatos'); 
+//$db = new mysqli('hostname', 'usuario', 'cotraseÃ±a', 'basededatos'); 
  
 //if ($db->connect_errno > 0) { 
 //    die('Imposible conectar [' . $db->connect_error . ']'); 
@@ -55,7 +47,7 @@ $mail->Password = "Hola123*";
 // Iniciamos el "bucle" para enviar multiples correos. 
  
 //while($row = $result->fetch_assoc()) { 
-    //Añadimos la direccion de quien envia el corre, en este caso Codejobs, primero el correo, luego el nombre de quien lo envia. 
+    //AÃ±adimos la direccion de quien envia el corre, en este caso Codejobs, primero el correo, luego el nombre de quien lo envia. 
  
     //contenido del correo pruebas 
 $body = '
@@ -101,7 +93,7 @@ client info text removed<br>
     // Enviamos el Mensaje 
     $mail->send(); 
  
-    // Borramos el destinatario, de esta forma nuestros clientes no ven los correos de las otras personas y parece que fuera un único correo para ellos. 
+    // Borramos el destinatario, de esta forma nuestros clientes no ven los correos de las otras personas y parece que fuera un Ãºnico correo para ellos. 
     $mail->ClearAddresses(); 
 
     //send the message, check for errors
@@ -112,6 +104,3 @@ client info text removed<br>
     }
 //}  
 ?>
-</body>
-</html>
- 
