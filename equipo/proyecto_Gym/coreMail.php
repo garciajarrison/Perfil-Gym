@@ -1,106 +1,108 @@
-<?php
-// Libreria PHPMailer
-require 'PHPMailer/PHPMailerAutoload.php';
- echo "Mailer Error: prb";
-// Creamos una nueva instancia
-$mail = new PHPMailer();
- 
-// Activamos el servicio SMTP
-$mail->isSMTP();
-// Activamos / Desactivamos el "debug" de SMTP 
-// 0 = Apagado 
-// 1 = Mensaje de Cliente 
-// 2 = Mensaje de Cliente y Servidor 
-$mail->SMTPDebug = 2; 
- 
-// Log del debug SMTP en formato HTML 
-$mail->Debugoutput = 'html'; 
- 
-// Servidor SMTP (para este ejemplo utilizamos gmail) 
-$mail->Host = 'smtp.gmail.com'; 
- 
-// Puerto SMTP 
-$mail->Port = 465; // 587; 
- 
-// Tipo de encriptacion SSL ya no se utiliza se recomienda TSL 
-$mail->SMTPSecure = 'tls'; 
- 
-// Si necesitamos autentificarnos 
-$mail->SMTPAuth = true; 
- 
-// Usuario del correo desde el cual queremos enviar, para Gmail recordar usar el usuario completo (usuario@gmail.com) 
-$mail->Username = "eafit.pruebas@gmail.com"; 
- 
-// Contraseña 
-$mail->Password = "Hola123*"; 
- 
-// Conectamos a la base de datos 
-//$db = new mysqli('hostname', 'usuario', 'cotraseña', 'basededatos'); 
- 
-//if ($db->connect_errno > 0) { 
-//    die('Imposible conectar [' . $db->connect_error . ']'); 
-//} 
- 
-// Creamos la sentencias SQL 
-//$result = $db->query("SELECT * FROM personas");
- 
-// Iniciamos el "bucle" para enviar multiples correos. 
- 
-//while($row = $result->fetch_assoc()) { 
-    //Añadimos la direccion de quien envia el corre, en este caso Codejobs, primero el correo, luego el nombre de quien lo envia. 
- 
-    //contenido del correo pruebas 
-$body = '
-<html>
-<body>
-client info text removed<br>
-Registration Confirmation:<br><br>
-___________________________________________________________________<br>
-Class ID: 123123<br>
-Registered by: hard<br>
-Email: prb@prb.com<br>
-<br>
-Date: hoy<br>
-<br>
-You will receive an invitation from client info text removed. You may also receive an update with documents and a reminder with client info text removed.  Please watch your e-mail.<br>
-Thanks,<br>
-Name<br>
-____________________________________________________________________<br>
-client info text removed<br>
-client info text removed<br>
-client info text removed<br>
-client info text removed<br>
-client info text removed<br>
-</body>
-</html>
-';
+
+ <?php
+
+$msg = null;
+
+      if (isset($_POST["phpmailer"]))
+     {
+        
+    $nombre = htmlspecialchars($_POST["nombre"]);
+    $email = htmlspecialchars($_POST["email"]);
+    $asunto =htmlspecialchars( $_POST["asunto"]);
+    $mensaje = $_POST["mensaje"];
+    $adjunto = $_FILES["adjunto"];
+        
+        require "PHPMailer/class.phpmailer.php";
+    
+          $mail = new PHPMailer;
+          
+          //indico a la clase que use SMTP
+          $mail->IsSMTP();
+          
+          //permite modo debug para ver mensajes de las cosas que van ocurriendo
+          //$mail->SMTPDebug = 2;
+
+          //Debo de hacer autenticación SMTP
+          $mail->SMTPAuth = true;
+          $mail->SMTPSecure = "ssl";
+
+          //indico el servidor de Gmail para SMTP
+          $mail->Host = "smtp.gmail.com";
+
+          //indico el puerto que usa Gmail
+          $mail->Port = 465;
 
 
-
- 
-    $mail->setFrom('eafit.pruebas@gmail.com', 'Pruebas!'); 
-    //$mail->addAddress($row['PersonasEmail'], $row['PersonasNombre']); 
-	$mail->addAddress('garciajarrison@gmail.com', 'jarrison andrey garcia paniagua'); 
- 
-    //La linea de asunto 
-    $mail->Subject = 'Bienvenido a Pruebas!'; 
- 
-    // La mejor forma de enviar un correo, es creando un HTML e insertandolo de la siguiente forma, PHPMailer permite insertar, imagenes, css, etc. (No se recomienda el uso de Javascript) 
- 
-    //$mail->msgHTML(file_get_contents('contenido.html'), dirname(__FILE__)); 
-    $mail->MsgHTML($body);
-
-    // Enviamos el Mensaje 
-    $mail->send(); 
- 
-    // Borramos el destinatario, de esta forma nuestros clientes no ven los correos de las otras personas y parece que fuera un único correo para ellos. 
-    $mail->ClearAddresses(); 
-
-    //send the message, check for errors
-    if (!$mail->send()) {
-        echo "Mailer Error: " . $mail->ErrorInfo;
-    } else {
-        echo "Message sent!";
+        // Usuario del correo desde el cual queremos enviar, para Gmail recordar usar el usuario completo (usuario@gmail.com) 
+        $mail->Username = "eafit.pruebas@gmail.com"; 
+        // Contraseña 
+        $mail->Password = "Hola123*"; 
+       
+          $mail->From = "eafit.pruebas@gmail.com";
+        
+          $mail->FromName = "Administrador";
+        
+          $mail->Subject = $asunto;
+        
+          $mail->addAddress($email, $nombre);
+        
+          $mail->MsgHTML($mensaje);
+        
+    
+       if ($adjunto ["size"] > 0)
+      {
+           
+          $mail->addAttachment($adjunto ["tmp_name"], $adjunto ["name"]);
+   }
+    
+        
+          if($mail->Send())
+        {
+    $msg= "En hora buena el mensaje ha sido enviado con exito a $email";
     }
-//}  
+        else
+        {
+    $msg = "Lo siento, ha habido un error al enviar el mensaje a $email";
+    }
+ }
 ?>
+    
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Contacto</title>
+</head>
+<body>
+<h3>Email de Contacto</h3>
+<strong><?php echo $msg; ?></strong>
+
+<form action="<?php echo $_SERVER["PHP_SELF"] ?>" method="post" enctype="multipart/form-data">
+    
+<table border="0">
+<tr>
+<td>Nombre del destinatario:</td>
+<td><input name="nombre" type="text" id="nombre"></td>
+</tr>
+<tr>
+<td>Email del destinatario:</td>
+<td><input name="email" type="text" id="email"></td>
+</tr>
+<tr>
+<td>Asunto:</td>
+<td><input name="asunto" type="text" id="asunto"></td>
+</tr>
+<tr>
+<td>Archivo adjunto:</td>
+<td><input type="file" name="adjunto"></td>
+</tr>
+<tr>
+<td>Mensaje:</td>
+<td><textarea name="mensaje" cols="50" rows="15" id="mensaje"></textarea></td>
+</tr>
+<tr>
+<td></td><td><input type="submit" value="Enviar"></td>
+</tr>
+</table>
+<input type="hidden" name="phpmailer">
+</form>
+</body>
