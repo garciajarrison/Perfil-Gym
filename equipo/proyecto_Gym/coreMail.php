@@ -1,7 +1,7 @@
 <?php
 // Libreria PHPMailer
 require 'PHPMailer/PHPMailerAutoload.php';
- 
+ echo "Mailer Error: prb";
 // Creamos una nueva instancia
 $mail = new PHPMailer();
  
