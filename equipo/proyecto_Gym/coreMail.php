@@ -20,7 +20,7 @@ $mail->Debugoutput = 'html';
 $mail->Host = 'smtp.gmail.com'; 
  
 // Puerto SMTP 
-$mail->Port = 587; 
+$mail->Port = 465; // 587; 
  
 // Tipo de encriptacion SSL ya no se utiliza se recomienda TSL 
 $mail->SMTPSecure = 'tls'; 
